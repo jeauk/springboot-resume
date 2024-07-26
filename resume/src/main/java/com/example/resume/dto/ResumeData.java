@@ -14,10 +14,10 @@ import lombok.Data;
 @Data
 public class ResumeData {
   Long id;
-  List<CertificationForm> certificationForms;
-  List<EducationForm> educationForms;
-  List<ExperienceForm> experienceForms;
+  List<CertificationForm> certificationForm;
+  List<EducationForm> educationForm;
+  List<ExperienceForm> experienceForm;
   List<HighSchoolForm> highSchoolForm;
-  List<MaxLengthInput> maxLengthInputs;
+  List<MaxLengthInput> maxLengthInput;
   UserInfo userInfo;
 }
