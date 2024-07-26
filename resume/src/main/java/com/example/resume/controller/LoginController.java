@@ -49,6 +49,7 @@ public class LoginController {
           response.put("msg", "Login successful");
           jwt = jwtUtil.createJwt(users.getEmail());
           response.put("name", users.getName());
+          response.put("id", users.getId());
         } else {
           response.put("code", 401);
           response.put("msg", "Invalid password");
