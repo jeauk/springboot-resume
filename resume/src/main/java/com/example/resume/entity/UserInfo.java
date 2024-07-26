@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
@@ -17,4 +18,7 @@ public class UserInfo {
   String address;
   String detailedAddress;
   String email;
+
+  @ManyToOne
+  User user;
 }

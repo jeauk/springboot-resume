@@ -53,20 +53,21 @@ public class LoginController {
     if (opt.isPresent()) {
       User users = opt.get();
 
-      if (users.getPassword().equals(user.getPassword())) {
-        response.put("code", 200);
-        response.put("msg", "Login successful");
-        jwt = jwtUtil.createJwt(users.getEmail());
-        response.put("name", users.getName());
+        if (users.getPassword().equals(user.getPassword())) {
+          response.put("code", 200);
+          response.put("msg", "Login successful");
+          jwt = jwtUtil.createJwt(users.getEmail());
+          response.put("name", users.getName());
+          response.put("id", users.getId());
+        } else {
+          response.put("code", 401);
+          response.put("msg", "Invalid password");
+        }
       } else {
-        response.put("code", 401);
-        response.put("msg", "Invalid password");
+        response.put("code", 404);
+        response.put("msg", "User not Email");
       }
-    } else {
-      response.put("code", 404);
-      response.put("msg", "User not Email");
-    }
-    response.put("result", jwt);
+      response.put("result", jwt);
 
     return response;
   }
