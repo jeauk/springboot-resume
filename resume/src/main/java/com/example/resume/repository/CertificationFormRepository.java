@@ -9,5 +9,5 @@ import com.example.resume.entity.HighSchoolForm;
 
 public interface CertificationFormRepository extends JpaRepository<CertificationForm, Long>{
     List<CertificationForm> findByUserId(Long userId);
-  
+    void deleteByUserId(Long userId);
 }

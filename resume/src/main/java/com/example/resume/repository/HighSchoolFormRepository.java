@@ -8,4 +8,5 @@ import com.example.resume.entity.HighSchoolForm;
 
 public interface HighSchoolFormRepository extends JpaRepository <HighSchoolForm, Long>{
     List<HighSchoolForm> findByUserId(Long userId);
+    void deleteByUserId(Long userId);
 }

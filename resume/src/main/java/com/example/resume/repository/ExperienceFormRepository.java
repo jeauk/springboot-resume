@@ -9,5 +9,5 @@ import com.example.resume.entity.HighSchoolForm;
 
 public interface ExperienceFormRepository extends JpaRepository <ExperienceForm, Long>{
     List<ExperienceForm> findByUserId(Long userId);
-  
+    void deleteByUserId(Long userId);
 }

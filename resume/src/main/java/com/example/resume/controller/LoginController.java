@@ -50,6 +50,7 @@ public class LoginController {
           jwt = jwtUtil.createJwt(users.getEmail());
           response.put("name", users.getName());
           response.put("id", users.getId());
+          response.put("jwt", jwt);  // JWT 토큰을 반환
         } else {
           response.put("code", 401);
           response.put("msg", "Invalid password");
@@ -58,7 +59,6 @@ public class LoginController {
         response.put("code", 404);
         response.put("msg", "User not Email");
       }
-      response.put("result", jwt);
 
       return response;
     }

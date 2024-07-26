@@ -1,5 +1,7 @@
 package com.example.resume.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,96 +12,117 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.resume.dto.ResumeData;
-import com.example.resume.entity.CertificationForm;
-import com.example.resume.entity.EducationForm;
-import com.example.resume.entity.ExperienceForm;
-import com.example.resume.entity.HighSchoolForm;
-import com.example.resume.entity.MaxLengthInput;
-import com.example.resume.entity.User;
-import com.example.resume.entity.UserInfo;
-import com.example.resume.repository.CertificationFormRepository;
-import com.example.resume.repository.EducationFormRepository;
-import com.example.resume.repository.ExperienceFormRepository;
-import com.example.resume.repository.HighSchoolFormRepository;
-import com.example.resume.repository.MaxLengthInputRepository;
-import com.example.resume.repository.UserInfoRepository;
+import com.example.resume.entity.*;
+import com.example.resume.repository.*;
+
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
 @RestController
+@Transactional
 @RequestMapping("/resume")
 public class ResumeController {
 
-  @Autowired CertificationFormRepository certificationFormRepository;
-  @Autowired EducationFormRepository educationFormRepository;
-  @Autowired ExperienceFormRepository experienceFormRepository;
-  @Autowired HighSchoolFormRepository highSchoolFormRepository;  
-  @Autowired MaxLengthInputRepository maxLengthInputRepository;
-  @Autowired UserInfoRepository userInfoRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ResumeController.class);
 
-  @PostMapping("/data")
-  public void saveResumeData(@RequestBody ResumeData resumeData) {
-    System.out.println("1111");
-    User user = new User();
-    // user.setId(resumeData.getId()); // 사용자 ID 설정
-    user.setId(1L); // 사용자 ID 설정
+    @Autowired
+    CertificationFormRepository certificationFormRepository;
+    @Autowired
+    EducationFormRepository educationFormRepository;
+    @Autowired
+    ExperienceFormRepository experienceFormRepository;
+    @Autowired
+    HighSchoolFormRepository highSchoolFormRepository;  
+    @Autowired
+    MaxLengthInputRepository maxLengthInputRepository;
+    @Autowired
+    UserInfoRepository userInfoRepository;
 
-    // UserInfo 저장
-    UserInfo userInfo = resumeData.getUserInfo();
-    userInfo.setUser(user);
-    userInfoRepository.save(userInfo);
+    @PostMapping("/data")
+    public void saveResumeData(@RequestBody ResumeData resumeData) {
+        try {
+            logger.info("Received resume data: {}", resumeData);
 
-    // HighSchoolForms 저장
-    List<HighSchoolForm> hsForms = resumeData.getHighSchoolForm();
-    for (HighSchoolForm form : hsForms) {
-      form.setUser(user);
-      highSchoolFormRepository.save(form);
+            Long userId = Long.parseLong(resumeData.getId());  // 사용자 ID를 받음
+            User user = new User();
+            user.setId(userId); // 사용자 ID 설정
+
+            // 해당 사용자의 기존 데이터 삭제
+            deleteUserExistingData(user.getId());
+
+            // 새로운 UserInfo 저장
+            UserInfo userInfo = resumeData.getUserInfo();
+            userInfo.setUser(user);
+            userInfoRepository.save(userInfo);
+
+            // 새로운 HighSchoolForms 저장
+            List<HighSchoolForm> hsForms = resumeData.getHighSchoolForm();
+            for (HighSchoolForm form : hsForms) {
+                form.setUser(user);
+                highSchoolFormRepository.save(form);
+            }
+
+            // 새로운 EducationForms 저장
+            List<EducationForm> edForms = resumeData.getEducationForm();
+            for (EducationForm form : edForms) {
+                form.setUser(user);
+                educationFormRepository.save(form);
+            }
+
+            // 새로운 ExperienceForms 저장
+            List<ExperienceForm> expForms = resumeData.getExperienceForm();
+            for (ExperienceForm form : expForms) {
+                form.setUser(user);
+                experienceFormRepository.save(form);
+            }
+
+            // 새로운 CertificationForms 저장
+            List<CertificationForm> certForms = resumeData.getCertificationForm();
+            for (CertificationForm form : certForms) {
+                form.setUser(user);
+                certificationFormRepository.save(form);
+            }
+
+            // 새로운 MaxLengthInputs 저장
+            List<MaxLengthInput> maxInputs = resumeData.getMaxLengthInput();
+            for (MaxLengthInput input : maxInputs) {
+                input.setUser(user);
+                maxLengthInputRepository.save(input);
+            }
+
+            logger.info("Resume data saved successfully");
+
+        } catch (Exception e) {
+            logger.error("Error saving resume data", e);
+            throw e;
+        }
     }
 
-    // EducationForms 저장
-    List<EducationForm> edForms = resumeData.getEducationForm();
-    for (EducationForm form : edForms) {
-      form.setUser(user);
-      educationFormRepository.save(form);
+    @GetMapping("/data/{userId}")
+    public ResumeData getResumeData(@PathVariable Long userId) {
+        ResumeData resumeData = new ResumeData();
+
+        Optional<UserInfo> userInfoOpt = userInfoRepository.findByUserId(userId);
+        userInfoOpt.ifPresent(resumeData::setUserInfo);
+
+        resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
+        resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
+        resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
+        resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
+        resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
+
+        return resumeData;
     }
 
-    // ExperienceForms 저장
-    List<ExperienceForm> expForms = resumeData.getExperienceForm();
-    for (ExperienceForm form : expForms) {
-      form.setUser(user);
-      experienceFormRepository.save(form);
+    private void deleteUserExistingData(Long userId) {
+        userInfoRepository.deleteByUserId(userId);
+        highSchoolFormRepository.deleteByUserId(userId);
+        educationFormRepository.deleteByUserId(userId);
+        experienceFormRepository.deleteByUserId(userId);
+        certificationFormRepository.deleteByUserId(userId);
+        maxLengthInputRepository.deleteByUserId(userId);
     }
-
-    // CertificationForms 저장
-    List<CertificationForm> certForms = resumeData.getCertificationForm();
-    for (CertificationForm form : certForms) {
-      form.setUser(user);
-      certificationFormRepository.save(form);
-    }
-
-    // MaxLengthInputs 저장
-    List<MaxLengthInput> maxInputs = resumeData.getMaxLengthInput();
-    for (MaxLengthInput input : maxInputs) {
-      input.setUser(user);
-      maxLengthInputRepository.save(input);
-    }
-  }
-
-  @GetMapping("/data/{userId}")
-  public ResumeData getResumeData(@PathVariable Long userId) {
-    ResumeData resumeData = new ResumeData();
-
-    Optional<UserInfo> userInfoOpt = userInfoRepository.findById(userId);
-    userInfoOpt.ifPresent(resumeData::setUserInfo);
-
-    resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
-    resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
-    resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
-    resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
-    resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
-
-    return resumeData;
-  }
 }

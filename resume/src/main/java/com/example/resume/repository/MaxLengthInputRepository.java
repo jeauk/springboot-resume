@@ -10,4 +10,5 @@ import com.example.resume.entity.MaxLengthInput;
 public interface MaxLengthInputRepository extends JpaRepository <MaxLengthInput, Long>{
   
     List<MaxLengthInput> findByUserId(Long userId);
+    void deleteByUserId(Long userId);
 }
