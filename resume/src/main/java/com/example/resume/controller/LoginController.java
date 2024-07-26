@@ -22,27 +22,36 @@ public class LoginController {
 
   @Autowired
   JwtUtil jwtUtil;
-  
+
   @PostMapping("/signup")
   public Map<String, Object> signUp(@RequestBody User signUp) {
-    User result = userRepository.save(signUp);
+    Optional<User> opt = userRepository.findByEmail(signUp.getEmail());
     Map<String, Object> map = new HashMap<>();
-    map.put("code", 200);
-    map.put("msg", "가입완료");
-    map.put("result", result);
+
+    if (opt.isPresent()) {
+      map.put("code", 401);
+      map.put("msg", "이메일 중복");
+    } else {
+      User result = userRepository.save(signUp);
+      map.put("code", 200);
+      map.put("msg", "가입완료");
+    }
+
     return map;
   }
 
+  
+
   @PostMapping("/signin")
   public Map<String, Object> signin(@RequestBody User user) {
-      Optional<User> opt = userRepository.findByEmail(user.getEmail());
-  
-      Map<String, Object> response = new HashMap<>();
-      
-      String jwt = null;
- 
-      if (opt.isPresent()) {
-        User users = opt.get();
+    Optional<User> opt = userRepository.findByEmail(user.getEmail());
+
+    Map<String, Object> response = new HashMap<>();
+
+    String jwt = null;
+
+    if (opt.isPresent()) {
+      User users = opt.get();
 
         if (users.getPassword().equals(user.getPassword())) {
           response.put("code", 200);
@@ -60,6 +69,6 @@ public class LoginController {
         response.put("msg", "User not Email");
       }
 
-      return response;
-    }
+    return response;
+  }
 }
