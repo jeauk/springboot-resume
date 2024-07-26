@@ -55,29 +55,28 @@ public class ResumeController {
     }
 
     // Save EducationForms
-    
-    List<EducationForm> edForms = resumeData.getEducationForm();
+    List<EducationForm> edForms = resumeData.getEducationForms();
     for (EducationForm form : edForms) {
       form.setUser(user);
       educationFormRepository.save(form);
     }
 
     // Save ExperienceForms
-    List<ExperienceForm> expForms = resumeData.getExperienceForm();
+    List<ExperienceForm> expForms = resumeData.getExperienceForms();
     for (ExperienceForm form : expForms) {
       form.setUser(user);
       experienceFormRepository.save(form);
     }
 
     // Save CertificationForms
-    List<CertificationForm> certForms = resumeData.getCertificationForm();
+    List<CertificationForm> certForms = resumeData.getCertificationForms();
     for (CertificationForm form : certForms) {
       form.setUser(user);
       certificationFormRepository.save(form);
     }
 
     // Save MaxLengthInputs
-    List<MaxLengthInput> maxInputs = resumeData.getMaxLengthInput();
+    List<MaxLengthInput> maxInputs = resumeData.getMaxLengthInputs();
     for (MaxLengthInput input : maxInputs) {
       input.setUser(user);
       maxLengthInputRepository.save(input);
