@@ -32,23 +32,19 @@ import java.util.Optional;
 @RequestMapping("/resume")
 public class ResumeController {
 
-  @Autowired
-  private CertificationFormRepository certificationFormRepository;
-  @Autowired
-  private EducationFormRepository educationFormRepository;
-  @Autowired
-  private ExperienceFormRepository experienceFormRepository;
-  @Autowired
-  private HighSchoolFormRepository highSchoolFormRepository;
-  @Autowired
-  private MaxLengthInputRepository maxLengthInputRepository;
-  @Autowired
-  private UserInfoRepository userInfoRepository;
+  @Autowired CertificationFormRepository certificationFormRepository;
+  @Autowired EducationFormRepository educationFormRepository;
+  @Autowired ExperienceFormRepository experienceFormRepository;
+  @Autowired HighSchoolFormRepository highSchoolFormRepository;  
+  @Autowired MaxLengthInputRepository maxLengthInputRepository;
+  @Autowired UserInfoRepository userInfoRepository;
 
   @PostMapping("/data")
   public void saveResumeData(@RequestBody ResumeData resumeData) {
+    System.out.println("1111");
     User user = new User();
-    user.setId(resumeData.getId()); // 사용자 ID 설정
+    // user.setId(resumeData.getId()); // 사용자 ID 설정
+    user.setId(1L); // 사용자 ID 설정
 
     // UserInfo 저장
     UserInfo userInfo = resumeData.getUserInfo();
