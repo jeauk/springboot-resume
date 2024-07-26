@@ -102,20 +102,21 @@ public class ResumeController {
     }
 
     @GetMapping("/data/{userId}")
-    public ResumeData getResumeData(@PathVariable Long userId) {
-        ResumeData resumeData = new ResumeData();
+public ResumeData getResumeData(@PathVariable Long userId) {
+    ResumeData resumeData = new ResumeData();
 
-        Optional<UserInfo> userInfoOpt = userInfoRepository.findByUserId(userId);
-        userInfoOpt.ifPresent(resumeData::setUserInfo);
+    Optional<UserInfo> userInfoOpt = userInfoRepository.findByUserId(userId);
+    userInfoOpt.ifPresent(resumeData::setUserInfo);
 
-        resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
-        resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
-        resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
-        resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
-        resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
+    resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
+    resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
+    resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
+    resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
+    resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
 
-        return resumeData;
-    }
+    return resumeData;
+}
+
 
     private void deleteUserExistingData(Long userId) {
         userInfoRepository.deleteByUserId(userId);

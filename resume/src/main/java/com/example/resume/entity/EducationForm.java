@@ -16,6 +16,8 @@ public class EducationForm {
   String school;
   String degree;
   String startDate;
+  String endDate;
+  String graduationStatus;
   @ManyToOne
   User user;
 }
