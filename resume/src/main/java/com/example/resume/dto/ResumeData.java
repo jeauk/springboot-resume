@@ -21,4 +21,5 @@ public class ResumeData {
   List<EducationForm> educationForm;
   List<ExperienceForm> experienceForm;
   List<MaxLengthInput> maxLengthInput;
+  String profileImagePath;
 }

@@ -3,13 +3,7 @@ package com.example.resume.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.resume.dto.ResumeData;
 import com.example.resume.entity.*;
@@ -35,7 +29,7 @@ public class ResumeController {
     @Autowired
     ExperienceFormRepository experienceFormRepository;
     @Autowired
-    HighSchoolFormRepository highSchoolFormRepository;  
+    HighSchoolFormRepository highSchoolFormRepository;
     @Autowired
     MaxLengthInputRepository maxLengthInputRepository;
     @Autowired
@@ -102,21 +96,20 @@ public class ResumeController {
     }
 
     @GetMapping("/data/{userId}")
-public ResumeData getResumeData(@PathVariable Long userId) {
-    ResumeData resumeData = new ResumeData();
+    public ResumeData getResumeData(@PathVariable Long userId) {
+        ResumeData resumeData = new ResumeData();
 
-    Optional<UserInfo> userInfoOpt = userInfoRepository.findByUserId(userId);
-    userInfoOpt.ifPresent(resumeData::setUserInfo);
+        Optional<UserInfo> userInfoOpt = userInfoRepository.findByUserId(userId);
+        userInfoOpt.ifPresent(resumeData::setUserInfo);
 
-    resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
-    resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
-    resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
-    resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
-    resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
+        resumeData.setHighSchoolForm(highSchoolFormRepository.findByUserId(userId));
+        resumeData.setEducationForm(educationFormRepository.findByUserId(userId));
+        resumeData.setExperienceForm(experienceFormRepository.findByUserId(userId));
+        resumeData.setCertificationForm(certificationFormRepository.findByUserId(userId));
+        resumeData.setMaxLengthInput(maxLengthInputRepository.findByUserId(userId));
 
-    return resumeData;
-}
-
+        return resumeData;
+    }
 
     private void deleteUserExistingData(Long userId) {
         userInfoRepository.deleteByUserId(userId);

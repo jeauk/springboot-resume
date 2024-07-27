@@ -18,6 +18,7 @@ public class UserInfo {
   String address;
   String detailedAddress;
   String email;
+  String profileImagePath;
 
   @ManyToOne
   User user;
