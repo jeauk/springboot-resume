@@ -75,18 +75,18 @@ public class LoginController {
 
         if (users.getPassword().equals(user.getPassword())) {
           response.put("code", 200);
-          response.put("msg", "Login successful");
+          response.put("msg", "로그인 성공");
           jwt = jwtUtil.createJwt(users.getEmail());
           response.put("name", users.getName());
           response.put("id", users.getId());
           response.put("jwt", jwt);  // JWT 토큰을 반환
         } else {
           response.put("code", 401);
-          response.put("msg", "Invalid password");
+          response.put("msg", "비밀번호가 잘못되었습니다");
         }
       } else {
         response.put("code", 404);
-        response.put("msg", "User not Email");
+        response.put("msg", "이메일이 잘못되었습니다");
       }
 
     return response;
