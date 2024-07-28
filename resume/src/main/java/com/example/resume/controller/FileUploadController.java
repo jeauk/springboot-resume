@@ -28,10 +28,10 @@ public class FileUploadController {
                 return "파일이 비어있습니다.";
             }
 
-            Path copyLocation = Paths.get(uploadDir + "/" + file.getOriginalFilename());
+            Path copyLocation = Paths.get(uploadDir).resolve(file.getOriginalFilename());
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return "/img/" + file.getOriginalFilename(); // 파일 경로 반환
+            return "/resume/img/" + file.getOriginalFilename(); // 파일 경로 반환
         } catch (Exception e) {
             logger.error("파일 업로드 오류", e);
             return "파일 업로드 중 오류가 발생했습니다.";
